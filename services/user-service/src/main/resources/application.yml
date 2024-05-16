@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/12306Impl?useUnicode=true&characterEncoding=utf-8&useSSL=false&AllowPublicKeyRetrieval=true
+    username: root
+    password: 12345678
+    druid:
+      max-active: 80
+      initial-size: 10
+      min-evictable-idle-time-millis: 300000
+      max-wait: 30000
