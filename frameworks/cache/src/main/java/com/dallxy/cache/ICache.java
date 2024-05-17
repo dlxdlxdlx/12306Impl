@@ -1,11 +1,9 @@
 package com.dallxy.cache;
 
-import com.dallxy.cache.handler.ValueMissingHandler;
-import jakarta.annotation.Nullable;
-
 import java.util.Map;
+import java.util.function.Function;
 
-public interface Cache<K, V> {
+public interface ICache<K, V> {
     /**
      * Retrieves the value associated with the provided key if it is present in the cache.
      *
@@ -13,6 +11,10 @@ public interface Cache<K, V> {
      * @return The value to which the specified key is mapped, or null if the cache contains no mapping for the key.
      */
     V getIfPresent(K key);
+
+
+
+    V get(K key, Function<K, V> valueMissingHandler);
 
     /**
      * Associates the specified value with the specified key in the cache.
@@ -38,22 +40,6 @@ public interface Cache<K, V> {
      */
     void invalidate(K key);
 
-    /**
-     * Removes all of the mappings from the cache for the given keys.
-     *
-     * @param keys The keys whose mappings are to be removed from the cache.
-     */
-    void invalidateAll(Iterable<? extends K> keys);
-
-    /**
-     * Removes all of the mappings from the cache.
-     */
-    void invalidateAll();
-
-    @Nullable
-    V loadIfAbsent(K key, ValueMissingHandler<? super K, ? extends V> handler);
 
 
-    @Nullable
-    V loadUtilGet(K key, ValueMissingHandler<? super K, ? extends V> ...handler)throws Exception;
 }

@@ -16,6 +16,7 @@
         <module>database</module>
         <module>common</module>
         <module>cache</module>
+        <module>bizs</module>
     </modules>
 
     <properties>
