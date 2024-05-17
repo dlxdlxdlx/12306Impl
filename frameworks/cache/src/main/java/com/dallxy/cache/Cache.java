@@ -1,7 +1,9 @@
 package com.dallxy.cache;
 
+import com.dallxy.cache.handler.ValueMissingHandler;
+import jakarta.annotation.Nullable;
+
 import java.util.Map;
-import java.util.function.Function;
 
 public interface Cache<K, V> {
     /**
@@ -47,4 +49,11 @@ public interface Cache<K, V> {
      * Removes all of the mappings from the cache.
      */
     void invalidateAll();
+
+    @Nullable
+    V loadIfAbsent(K key, ValueMissingHandler<? super K, ? extends V> handler);
+
+
+    @Nullable
+    V loadUtilGet(K key, ValueMissingHandler<? super K, ? extends V> ...handler)throws Exception;
 }
