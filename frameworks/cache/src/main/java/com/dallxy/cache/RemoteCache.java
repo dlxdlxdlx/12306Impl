@@ -6,15 +6,17 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-@Component
 @RequiredArgsConstructor
-public class RemoteCache implements Cache<String,Object>{
+@Component
+public class RemoteCache implements ICache<String, Object> {
 
     private final StringRedisTemplate stringRedisTemplate;
 
-    public Object getIfPresent(String key, Class<?> clazz){
+    public <T> T getIfPresent(String key, Class<T> clazz) {
         return JSONObject.parseObject(stringRedisTemplate.opsForValue().get(key), clazz);
     }
 
@@ -23,9 +25,17 @@ public class RemoteCache implements Cache<String,Object>{
         return stringRedisTemplate.opsForValue().get(key);
     }
 
+    public <T> T get(String key, Function<String, Object> valueMissingHandler, Class<T> clazz) {
+        return JSONObject.parseObject((String) get(key, valueMissingHandler), clazz);
+    }
+
     @Override
-    public Object get(String key, Function<? super String, ?> loader, long timeout) {
-        return null;
+    public Object get(String key, Function<String, Object> valueMissingHandler) {
+        return Optional.ofNullable(stringRedisTemplate.opsForValue().get(key)).orElseGet(() -> {
+            Object v = valueMissingHandler.apply(key);
+            stringRedisTemplate.opsForValue().set(key, JSONObject.toJSONString(v));
+            return JSONObject.toJSONString(v);
+        });
     }
 
     @Override
@@ -33,17 +43,20 @@ public class RemoteCache implements Cache<String,Object>{
         stringRedisTemplate.opsForValue().set(key, JSONObject.toJSONString(value));
     }
 
+    public void put(String key, Object value, long timeout, TimeUnit unit){
+        stringRedisTemplate.opsForValue().set(key,JSONObject.toJSONString(value));
+        stringRedisTemplate.expire(key, timeout, unit);
+    }
+
     @Override
     public void putAll(Map<? extends String, ?> map) {
-        map.forEach((k,v) -> stringRedisTemplate.opsForValue().set(k, JSONObject.toJSONString(v)));
+        map.forEach((k, v) -> stringRedisTemplate.opsForValue().set(k, JSONObject.toJSONString(v)));
     }
 
     @Override
     public void invalidate(String key) {
         stringRedisTemplate.delete(key);
     }
-
-
 
 
 }

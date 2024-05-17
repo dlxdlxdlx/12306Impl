@@ -3,7 +3,7 @@ package com.dallxy.cache;
 import java.util.Map;
 import java.util.function.Function;
 
-public interface Cache<K, V> {
+public interface ICache<K, V> {
     /**
      * Retrieves the value associated with the provided key if it is present in the cache.
      *
@@ -12,7 +12,9 @@ public interface Cache<K, V> {
      */
     V getIfPresent(K key);
 
-    V get(K key, Function<? super K, ? extends V> loader, long timeout);
+
+
+    V get(K key, Function<K, V> valueMissingHandler);
 
     /**
      * Associates the specified value with the specified key in the cache.
@@ -37,6 +39,7 @@ public interface Cache<K, V> {
      * @param key The key whose mapping is to be removed from the cache.
      */
     void invalidate(K key);
+
 
 
 }

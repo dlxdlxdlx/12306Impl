@@ -1,21 +1,19 @@
 package com.dallxy.cache.config;
 
-import com.dallxy.cache.Cache;
+import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import lombok.AllArgsConstructor;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.util.concurrent.TimeUnit;
 
-@AllArgsConstructor
 public class CacheAutoConfiguration {
     @Value("${service.cache.prefix}")
     private String cachePrefix;
@@ -28,8 +26,8 @@ public class CacheAutoConfiguration {
     private double falseProbability;
 
     @Bean
-    public Cache<String, Object> caffeineCache() {
-        return (Cache<String, Object>) Caffeine.newBuilder()
+    public Cache caffeineCache() {
+        return Caffeine.newBuilder()
                 .expireAfterWrite(3, TimeUnit.HOURS)
                 .initialCapacity(100)
                 .maximumSize(1000)
@@ -40,7 +38,7 @@ public class CacheAutoConfiguration {
     @Bean
     public LoadingCache<String, Object> caffeineLoadingCache() {
         return Caffeine.newBuilder()
-                .expireAfterWrite(3, TimeUnit.HOURS)
+                .expireAfterAccess(1, TimeUnit.HOURS)
                 .initialCapacity(100)
                 .maximumSize(1000)
                 .softValues()
@@ -48,14 +46,14 @@ public class CacheAutoConfiguration {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redissonConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
+    public StringRedisTemplate redisTemplate(RedisConnectionFactory redissonConnectionFactory) {
+        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate(redissonConnectionFactory);
         GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
-        redisTemplate.setConnectionFactory(redissonConnectionFactory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
-        redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
-        return redisTemplate;
+        stringRedisTemplate.setConnectionFactory(redissonConnectionFactory);
+        stringRedisTemplate.setKeySerializer(new StringRedisSerializer());
+        stringRedisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
+        stringRedisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
+        return stringRedisTemplate;
     }
 
     @Bean
