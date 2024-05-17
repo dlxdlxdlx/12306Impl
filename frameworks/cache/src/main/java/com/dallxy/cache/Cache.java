@@ -12,6 +12,8 @@ public interface Cache<K, V> {
      */
     V getIfPresent(K key);
 
+    V get(K key, Function<? super K, ? extends V> loader, long timeout);
+
     /**
      * Associates the specified value with the specified key in the cache.
      * If the cache previously contained a mapping for the key, the old value is replaced by the specified value.

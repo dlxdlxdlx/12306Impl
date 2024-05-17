@@ -5,16 +5,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.function.Function;
 
 @Component
 @RequiredArgsConstructor
 public class LocalCache implements Cache<String, Object>{
     private final LoadingCache<String, Object> caffeineLoadingCache;
-
+    private final RemoteCache remoteCache;
 
     @Override
     public Object getIfPresent(String key) {
         return caffeineLoadingCache.getIfPresent(key);
+    }
+
+    @Override
+    public Object get(String key, Function<? super String, ?> loader, long timeout) {
+        return null;
     }
 
     @Override

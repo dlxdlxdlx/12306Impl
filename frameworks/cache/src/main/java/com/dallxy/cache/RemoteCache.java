@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.function.Function;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +21,11 @@ public class RemoteCache implements Cache<String,Object>{
     @Override
     public Object getIfPresent(String key) {
         return stringRedisTemplate.opsForValue().get(key);
+    }
+
+    @Override
+    public Object get(String key, Function<? super String, ?> loader, long timeout) {
+        return null;
     }
 
     @Override
