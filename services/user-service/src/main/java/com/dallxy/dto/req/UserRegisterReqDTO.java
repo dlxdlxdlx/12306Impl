@@ -1,27 +1,23 @@
-package com.dallxy.dto;
+package com.dallxy.dto.req;
 
-import com.dallxy.serialize.IdCardDesensitizationSerializer;
-import com.dallxy.serialize.PhoneDesensitizationSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 @Data
-public class UserQueryRespDTO {
-
+public class UserRegisterReqDTO {
     /**
      * 用户名
      */
     private String username;
 
     /**
+     * 密码
+     */
+    private String password;
+
+    /**
      * 真实姓名
      */
     private String realName;
-
-    /**
-     * 国家/地区
-     */
-    private String region;
 
     /**
      * 证件类型
@@ -31,19 +27,12 @@ public class UserQueryRespDTO {
     /**
      * 证件号
      */
-    @JsonSerialize(using = IdCardDesensitizationSerializer.class)
     private String idCard;
 
     /**
      * 手机号
      */
-    @JsonSerialize(using = PhoneDesensitizationSerializer.class)
     private String phone;
-
-    /**
-     * 固定电话
-     */
-    private String telephone;
 
     /**
      * 邮箱
@@ -58,7 +47,7 @@ public class UserQueryRespDTO {
     /**
      * 审核状态
      */
-    private Integer verifyStatus;
+    private Integer verifyState;
 
     /**
      * 邮编
@@ -69,4 +58,14 @@ public class UserQueryRespDTO {
      * 地址
      */
     private String address;
+
+    /**
+     * 国家/地区
+     */
+    private String region;
+
+    /**
+     * 固定电话
+     */
+    private String telephone;
 }

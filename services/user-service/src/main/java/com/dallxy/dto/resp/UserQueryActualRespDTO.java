@@ -1,5 +1,8 @@
-package com.dallxy.dto;
+package com.dallxy.dto.resp;
 
+import lombok.Data;
+
+@Data
 public class UserQueryActualRespDTO {
     /**
      * 用户名

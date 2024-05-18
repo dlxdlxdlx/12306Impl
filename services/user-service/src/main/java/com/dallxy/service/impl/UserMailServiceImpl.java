@@ -4,8 +4,8 @@ package com.dallxy.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dallxy.dao.UserMailDao;
-import com.dallxy.mapper.UserMailMapper;
 import com.dallxy.service.UserMailService;
+import com.dallxy.mapper.UserMailMapper;
 import org.springframework.stereotype.Service;
 
 /**

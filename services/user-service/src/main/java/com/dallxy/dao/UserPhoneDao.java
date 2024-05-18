@@ -7,7 +7,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.dallxy.database.dao.BaseDO;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 用户号码表
@@ -15,7 +19,8 @@ import lombok.Data;
  */
 @TableName(value ="t_user_phone")
 @Data
-public class UserPhoneDao implements Serializable {
+@Builder
+public class UserPhoneDao extends BaseDO implements Serializable {
     /**
      * ID
      */
@@ -37,20 +42,6 @@ public class UserPhoneDao implements Serializable {
      */
     private Long deletionTime;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
-
-    /**
-     * 删除标识
-     */
-    private Integer delFlag;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -100,9 +91,9 @@ public class UserPhoneDao implements Serializable {
         sb.append(", username=").append(username);
         sb.append(", phone=").append(phone);
         sb.append(", deletionTime=").append(deletionTime);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", delFlag=").append(delFlag);
+        sb.append(", createTime=").append(super.getCreateTime());
+        sb.append(", updateTime=").append(super.getUpdateTime());
+        sb.append(", delFlag=").append(super.getDelFlag());
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -14,6 +16,7 @@ import lombok.Data;
  */
 @TableName(value ="t_user")
 @Data
+@Builder
 public class UserDao implements Serializable {
     /**
      * ID
@@ -186,12 +189,6 @@ public class UserDao implements Serializable {
         sb.append(", verifyStatus=").append(verifyStatus);
         sb.append(", postCode=").append(postCode);
         sb.append(", address=").append(address);
-        sb.append(", deletionTime=").append(deletionTime);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", delFlag=").append(delFlag);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return getString(sb, deletionTime, createTime, updateTime, delFlag, serialVersionUID);
     }
 }

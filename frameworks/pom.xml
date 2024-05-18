@@ -17,6 +17,7 @@
         <module>common</module>
         <module>cache</module>
         <module>bizs</module>
+        <module>transaction</module>
     </modules>
 
     <properties>

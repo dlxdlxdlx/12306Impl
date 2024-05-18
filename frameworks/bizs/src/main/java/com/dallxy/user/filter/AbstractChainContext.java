@@ -5,37 +5,31 @@ import org.springframework.beans.BeansException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
+@Component
 public class AbstractChainContext<T> implements CommandLineRunner, ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
     private final Map<String, List<AbstractChainInterceptor>> chainInterceptors = new HashMap<>();
 
-    public void handler(String type, T requestParam) {
-        List<AbstractChainInterceptor> interceptors = chainInterceptors.get(type);
-        if (interceptors == null) {
-            throw new RuntimeException(String.format("[%s] Chain of Responsibility ID is undefined.", type));
-        }
-        interceptors.forEach(interceptor -> {
-            if (!interceptor.prehandle(requestParam)) {
-                throw new RuntimeException(String.format("[%s] Chain of Responsibility ID is undefined.", type));
-            }
-        });
+    public void handler(String type, T requestParam,Class<?> clazz) {
+        Optional.ofNullable(chainInterceptors.get(type)).orElseThrow(() -> new RuntimeException(String.format("[%s] Chain of Responsibility ID is undefined.", type)))
+                .forEach(interceptor -> {
+                    if (!interceptor.prehandle(clazz.cast(requestParam))) {
+                        //TODO: 设置interceptor对应的异常
+                        throw new RuntimeException(String.format("[%s] check failed.", type));
+                    }
+                });
     }
 
     @Override
     public void run(String... args) throws Exception {
         applicationContext.getBeansOfType(AbstractChainInterceptor.class).forEach((beanName, bean) -> {
-            List<AbstractChainInterceptor> interceptors = chainInterceptors.get(bean.getType());
-            if (interceptors == null) {
-                interceptors = new ArrayList<>();
-            }
+            List<AbstractChainInterceptor> interceptors = Optional.ofNullable(chainInterceptors.get(bean.getType())).orElse(new ArrayList<>());
             interceptors.add(bean);
             chainInterceptors.put(bean.getType(), interceptors);
         });

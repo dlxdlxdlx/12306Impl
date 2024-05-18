@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface VerifyArgs {
     String  type() default "";
+
+    Class<?> paramType() default Object.class;
 }

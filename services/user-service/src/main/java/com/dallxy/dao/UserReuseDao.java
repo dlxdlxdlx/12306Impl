@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.dallxy.database.dao.BaseDO;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -14,8 +17,9 @@ import lombok.Data;
  * @TableName t_user_reuse
  */
 @TableName(value ="t_user_reuse")
+@Builder
 @Data
-public class UserReuseDao implements Serializable {
+public class UserReuseDao extends BaseDO implements Serializable {
     /**
      * ID
      */
@@ -27,20 +31,7 @@ public class UserReuseDao implements Serializable {
      */
     private String username;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
 
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
-
-    /**
-     * 删除标识
-     */
-    private Integer delFlag;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -84,10 +75,11 @@ public class UserReuseDao implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", username=").append(username);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", delFlag=").append(delFlag);
+        sb.append(", createTime=").append(super.getCreateTime());
+        sb.append(", updateTime=").append(super.getUpdateTime());
+        sb.append(", delFlag=").append(super.getDelFlag());
         sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append(", super=").append(super.toString());
         sb.append("]");
         return sb.toString();
     }

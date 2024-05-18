@@ -1,5 +1,8 @@
-package com.dallxy.dto;
+package com.dallxy.dto.req;
 
+import lombok.Data;
+
+@Data
 public class UserUpdateReqDTO {
     /**
      * 用户ID

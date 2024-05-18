@@ -1,5 +1,8 @@
 package com.dallxy.user.aop.aspect;
 
+import com.dallxy.user.aop.annotation.VerifyArgs;
+import com.dallxy.user.filter.AbstractChainContext;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,12 +16,13 @@ import java.util.Arrays;
 @Aspect
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class ArgsVerifyAspect {
+    private final AbstractChainContext abstractChainContext;
 
-    @Around("@annotation(com.dallxy.user.aop.annotation.VerifyArgs)")
-    public Object verifyArgs(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println(Arrays.toString(joinPoint.getArgs()));
-        return joinPoint.proceed();
+    @Before("@annotation(verifyArgs)")
+    public void verifyArgs(JoinPoint joinPoint, VerifyArgs verifyArgs) throws Throwable {
+        abstractChainContext.handler(verifyArgs.type(), joinPoint.getArgs()[0], verifyArgs.paramType());
     }
 
 

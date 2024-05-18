@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.dallxy.database.dao.BaseDO;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -15,7 +18,8 @@ import lombok.Data;
  */
 @TableName(value ="t_user_mail")
 @Data
-public class UserMailDao implements Serializable {
+@Builder
+public class UserMailDao extends BaseDO implements Serializable {
     /**
      * ID
      */
@@ -37,20 +41,6 @@ public class UserMailDao implements Serializable {
      */
     private Long deletionTime;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
-
-    /**
-     * 删除标识
-     */
-    private Integer delFlag;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -100,11 +90,10 @@ public class UserMailDao implements Serializable {
         sb.append(", username=").append(username);
         sb.append(", mail=").append(mail);
         sb.append(", deletionTime=").append(deletionTime);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", delFlag=").append(delFlag);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append(super.toString());
         sb.append("]");
         return sb.toString();
     }
+
+
 }

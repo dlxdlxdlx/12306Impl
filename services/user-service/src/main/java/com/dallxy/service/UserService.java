@@ -1,6 +1,14 @@
 package com.dallxy.service;
 
-import com.dallxy.dto.*;
+import com.dallxy.dto.req.UserDeletionReqDTO;
+import com.dallxy.dto.req.UserLoginReqDTO;
+import com.dallxy.dto.req.UserRegisterReqDTO;
+import com.dallxy.dto.req.UserUpdateReqDTO;
+import com.dallxy.dto.resp.UserLoginRespDTO;
+import com.dallxy.dto.resp.UserQueryActualRespDTO;
+import com.dallxy.dto.resp.UserQueryRespDTO;
+import com.dallxy.dto.resp.UserRegisterRespDTO;
+import jakarta.validation.constraints.NotEmpty;
 
 public interface UserService {
     /**
@@ -44,8 +52,26 @@ public interface UserService {
 
     /**
      * 注销用户
+     * 从 UserDao, UserPhoneDao, UserMailDao
+     * 以及Local cache, Remote Cache中清除相关信息
      *
      * @param requestParam 注销用户入参
+     * @see com.dallxy.dao.UserDao
+     * @see com.dallxy.dao.UserPhoneDao
+     * @see com.dallxy.dao.UserMailDao
+     * @see com.dallxy.cache.ICache
      */
     void deletion(UserDeletionReqDTO requestParam);
+
+
+    void update(UserUpdateReqDTO reqestParam);
+
+    Integer queryUserDeletionNum(Integer idType, String idCard);
+
+    UserQueryRespDTO queryUserByUsername(@NotEmpty String username);
+
+    UserQueryRespDTO queryUserByUserId(@NotEmpty String userId);
+
+    UserQueryActualRespDTO queryActualUserByUsername(@NotEmpty String username);
+
 }

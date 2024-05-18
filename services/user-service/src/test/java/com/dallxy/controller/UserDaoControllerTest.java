@@ -30,6 +30,7 @@ class UserDaoControllerTest {
 
     @Test
     void login() {
+        t("10");
 //        System.out.println(applicationContext.getBeansOfType(ArgsVerifyAspect.class));
 //        System.out.println(applicationContext.getBeansOfType(LocalCache.class));
     }

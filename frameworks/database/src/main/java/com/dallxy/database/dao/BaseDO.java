@@ -3,11 +3,13 @@ package com.dallxy.database.dao;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Data
-public class BaseDO {
+@ToString
+public abstract class BaseDO {
     /**
      * 创建时间
      */

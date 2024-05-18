@@ -1,5 +1,8 @@
-package com.dallxy.dto;
+package com.dallxy.dto.resp;
 
+import lombok.Data;
+
+@Data
 public class UserLoginRespDTO {
     /**
      * 用户 ID

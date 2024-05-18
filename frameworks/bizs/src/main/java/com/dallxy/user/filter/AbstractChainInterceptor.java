@@ -1,19 +1,25 @@
 package com.dallxy.user.filter;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@RequiredArgsConstructor
 public abstract class AbstractChainInterceptor<REQ> {
 
     private String type;
 
-    abstract void preProcess(REQ request);
+    void preProcess(REQ request){
+        return;
+    }
 
-    abstract void postProcess(REQ request);
+    void postProcess(REQ request){
+        return;
+    }
 
-    abstract boolean handle(REQ request);
+    public abstract boolean handle(REQ request);
 
-    boolean prehandle(REQ request) {
+    public boolean prehandle(REQ request) {
         preProcess(request);
         if (handle(request)) {
             postProcess(request);
