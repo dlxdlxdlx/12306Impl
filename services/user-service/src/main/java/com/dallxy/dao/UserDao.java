@@ -189,6 +189,7 @@ public class UserDao implements Serializable {
         sb.append(", verifyStatus=").append(verifyStatus);
         sb.append(", postCode=").append(postCode);
         sb.append(", address=").append(address);
-        return getString(sb, deletionTime, createTime, updateTime, delFlag, serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

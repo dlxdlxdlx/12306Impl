@@ -23,6 +23,7 @@ import com.dallxy.dto.resp.UserQueryRespDTO;
 import com.dallxy.dto.resp.UserRegisterRespDTO;
 import com.dallxy.mapper.*;
 import com.dallxy.service.UserService;
+import com.dallxy.user.core.UserContext;
 import com.dallxy.user.core.UserInfoDTO;
 import com.dallxy.user.utils.JWTUtils;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+
+import static com.dallxy.common.constant.RedisConstant.USER_REGISTER_REUSE;
 
 @Service
 @RequiredArgsConstructor
@@ -100,9 +103,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean hasUsername(String username) {
-//        if (userReigisterCachePenetrationBloomFilter.contains(username)) {
-//            return stringRedisTemplate.opsForSet().isMember(USER_REGISTER_REUSE_SHARDING + username, username);
-//        }
+        if (userReigisterCachePenetrationBloomFilter.contains(username)) {
+            return stringRedisTemplate.opsForSet().isMember(USER_REGISTER_REUSE + username, username);
+        }
         return true;
     }
 
@@ -162,7 +165,7 @@ public class UserServiceImpl implements UserService {
                 }
             }
             userReuseMapper.delete(Wrappers.update(UserReuseDao.builder().username(username).build()));
-            stringRedisTemplate.opsForSet().remove(RedisConstant.USER_REGISTER_REUSE + username, username);
+            stringRedisTemplate.opsForSet().remove(USER_REGISTER_REUSE + username, username);
             userReigisterCachePenetrationBloomFilter.add(username);
 
         } finally {
@@ -213,8 +216,8 @@ public class UserServiceImpl implements UserService {
             }
 
 //            invalidate cache
-            remoteCache.invalidate(CacheKeyConstant.TOKEN_PREFIX + userQueryRespDTO.getAccessToken());
-            localCache.invalidate(CacheKeyConstant.TOKEN_PREFIX + userQueryRespDTO.getAccessToken());
+            remoteCache.invalidate(CacheKeyConstant.TOKEN_PREFIX + UserContext.getToken());
+            localCache.invalidate(CacheKeyConstant.TOKEN_PREFIX + UserContext.getToken());
 
 
         } finally {

@@ -5,6 +5,7 @@ import com.dallxy.dao.UserMailDao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /**
 * @author LiXin
@@ -19,6 +20,9 @@ public interface UserMailMapper extends BaseMapper<UserMailDao> {
 
     @Select("select username from t_user where mail = #{phone}")
     String getUserNameByPhone(@Param("phone") String phone);
+
+    @Update("update t_user_mail set deletion_time=#{deletionTime} , del_flag='1' where username = #{username} and del_flag='0'")
+    void deletionUser(UserMailDao userMailDao);
 }
 
 
