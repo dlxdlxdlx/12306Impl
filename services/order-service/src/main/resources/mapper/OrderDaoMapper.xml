@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dallxy.ticketService.dao.mapper.OrderDaoMapper">
+  <resultMap id="BaseResultMap" type="com.dallxy.orderService.dao.entity.OrderDao">
+    <!--@mbg.generated-->
+    <!--@Table t_order-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="train_id" jdbcType="BIGINT" property="trainId" />
+    <result column="train_number" jdbcType="VARCHAR" property="trainNumber" />
+    <result column="riding_date" jdbcType="DATE" property="ridingDate" />
+    <result column="departure" jdbcType="VARCHAR" property="departure" />
+    <result column="arrival" jdbcType="VARCHAR" property="arrival" />
+    <result column="departure_time" jdbcType="TIMESTAMP" property="departureTime" />
+    <result column="arrival_time" jdbcType="TIMESTAMP" property="arrivalTime" />
+    <result column="source" jdbcType="INTEGER" property="source" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="order_time" jdbcType="TIMESTAMP" property="orderTime" />
+    <result column="pay_type" jdbcType="INTEGER" property="payType" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="del_flag" jdbcType="BOOLEAN" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, order_sn, user_id, username, train_id, train_number, riding_date, departure, 
+    arrival, departure_time, arrival_time, `source`, `status`, order_time, pay_type, 
+    pay_time, create_time, update_time, del_flag
+  </sql>
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dallxy.ticketService.dao.mapper.TrainStationRelationDaoMapper">
+  <resultMap id="BaseResultMap" type="com.dallxy.ticketService.dao.TrainStationRelationDao">
+    <!--@mbg.generated-->
+    <!--@Table t_train_station_relation-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="train_id" jdbcType="BIGINT" property="trainId" />
+    <result column="departure" jdbcType="VARCHAR" property="departure" />
+    <result column="arrival" jdbcType="VARCHAR" property="arrival" />
+    <result column="start_region" jdbcType="VARCHAR" property="startRegion" />
+    <result column="end_region" jdbcType="VARCHAR" property="endRegion" />
+    <result column="departure_flag" jdbcType="BOOLEAN" property="departureFlag" />
+    <result column="arrival_flag" jdbcType="BOOLEAN" property="arrivalFlag" />
+    <result column="departure_time" jdbcType="TIMESTAMP" property="departureTime" />
+    <result column="arrival_time" jdbcType="TIMESTAMP" property="arrivalTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="del_flag" jdbcType="BOOLEAN" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, train_id, departure, arrival, start_region, end_region, departure_flag, arrival_flag, 
+    departure_time, arrival_time, create_time, update_time, del_flag
+  </sql>
+</mapper>
