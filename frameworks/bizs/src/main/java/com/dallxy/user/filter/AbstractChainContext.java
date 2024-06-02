@@ -16,10 +16,10 @@ public class AbstractChainContext<T> implements CommandLineRunner, ApplicationCo
     private static ApplicationContext applicationContext;
     private final Map<String, List<AbstractChainInterceptor>> chainInterceptors = new HashMap<>();
 
-    public void handler(String type, T requestParam,Class<?> clazz) {
+    public void handler(String type, T requestParam) {
         Optional.ofNullable(chainInterceptors.get(type)).orElseThrow(() -> new RuntimeException(String.format("[%s] Chain of Responsibility ID is undefined.", type)))
                 .forEach(interceptor -> {
-                    if (!interceptor.prehandle(clazz.cast(requestParam))) {
+                    if (!interceptor.prehandle(requestParam)) {
                         //TODO: 设置interceptor对应的异常
                         throw new RuntimeException(String.format("[%s] check failed.", type));
                     }

@@ -1,0 +1,11 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: 12306-gateway-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.173.133:8848

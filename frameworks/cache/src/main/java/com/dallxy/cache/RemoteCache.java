@@ -1,6 +1,8 @@
 package com.dallxy.cache;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -12,32 +14,21 @@ import java.util.function.Function;
 
 @RequiredArgsConstructor
 @Component
-public class RemoteCache implements ICache<String, Object> {
+public class RemoteCache implements ICache<String> {
     private static final long DEFAULT_TIMEOUT = 6;
     private static final TimeUnit DEFAULT_TIMEUNIT = TimeUnit.HOURS;
+
+    @Getter
     private final StringRedisTemplate stringRedisTemplate;
 
     public <T> T getIfPresent(String key, Class<T> clazz) {
         return JSONObject.parseObject(stringRedisTemplate.opsForValue().get(key), clazz);
     }
 
-    @Override
-    public Object getIfPresent(String key) {
-        return stringRedisTemplate.opsForValue().get(key);
-    }
 
-    public <T> T get(String key, Class<?> clazz, Function<String, Object> valueMissingHandler) {
-        return (T) get(key, valueMissingHandler);
-    }
-
-    @Override
-    public Object get(String key, Function<String, Object> valueMissingHandler) {
-        return get(key, valueMissingHandler, DEFAULT_TIMEOUT, DEFAULT_TIMEUNIT);
-    }
-
-    public Object get(String key, Function<String, Object> valueMissingHandler, long timeout, TimeUnit unit) {
+    public Object get(String key, Function<String, Object> handler, long timeout, TimeUnit unit) {
         return Optional.ofNullable(stringRedisTemplate.opsForValue().get(key)).orElseGet(() -> {
-            Object v = valueMissingHandler.apply(key);
+            Object v = handler.apply(key);
             stringRedisTemplate.opsForValue().set(key, JSONObject.toJSONString(v), timeout, unit);
             return JSONObject.toJSONString(v);
         });
@@ -54,7 +45,21 @@ public class RemoteCache implements ICache<String, Object> {
     }
 
     @Override
-    public void putAll(Map<? extends String, ?> map) {
+    public <T> T getIfPresent(String key) {
+        return Boolean.TRUE.equals(stringRedisTemplate.hasKey(key)) ? (T) stringRedisTemplate.opsForValue().get(key) : null;
+    }
+
+    @Override
+//    remote cache(redis等)的数据存储交给用户决定
+    public <V> V get(String key, Function<String, Object> handler) {
+        if(Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))){
+            return JSONObject.parseObject(stringRedisTemplate.opsForValue().get(key), new TypeReference<V>() {});
+        }
+        return (V)handler.apply(key);
+    }
+
+    @Override
+    public <V> void putAll(Map<? extends String, ? extends V> map) {
         map.forEach((k, v) -> stringRedisTemplate.opsForValue().set(k, JSONObject.toJSONString(v)));
     }
 

@@ -10,18 +10,14 @@ import com.dallxy.user.core.UserInfoDTO;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.dallxy.user.constant.UserConstant.*;
 
 
 public final class JWTUtils {
 
-    private static final long EXPIRATION = 86400L;
     public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String ISS = "index12306";
+    public static final String ISS = "12306Impl";
     public static final String SECRET = "SecretKey039245678901232039487623456783092349288901402967890140939827";
+    private static final long EXPIRATION = 86400L;
 
     /**
      * 生成用户 Token, payload中包含username user id,以及Real name, 设置过期时间为1天
@@ -50,7 +46,7 @@ public final class JWTUtils {
      * @return 用户信息
      */
     public static UserInfoDTO parseJwtToken(String token) {
-        if(StringUtils.isBlank(token)||!token.startsWith(TOKEN_PREFIX)){
+        if (StringUtils.isBlank(token) || !token.startsWith(TOKEN_PREFIX)) {
             return null;
         }
         token = token.substring(TOKEN_PREFIX.length());

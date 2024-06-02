@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dallxy.userService.mapper.PassengerMapper">
+  <resultMap id="BaseResultMap" type="com.dallxy.dao.Passenger">
+    <!--@mbg.generated-->
+    <!--@Table t_passenger-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="id_type" jdbcType="INTEGER" property="idType" />
+    <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="discount_type" jdbcType="INTEGER" property="discountType" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="verify_status" jdbcType="INTEGER" property="verifyStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="del_flag" jdbcType="BOOLEAN" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, username, real_name, id_type, id_card, discount_type, phone, create_date, verify_status, 
+    create_time, update_time, del_flag
+  </sql>
+</mapper>

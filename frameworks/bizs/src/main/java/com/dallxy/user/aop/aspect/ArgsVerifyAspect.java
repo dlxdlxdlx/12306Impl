@@ -5,13 +5,9 @@ import com.dallxy.user.filter.AbstractChainContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 
 @Aspect
 @Component
@@ -22,7 +18,7 @@ public class ArgsVerifyAspect {
 
     @Before("@annotation(verifyArgs)")
     public void verifyArgs(JoinPoint joinPoint, VerifyArgs verifyArgs) throws Throwable {
-        abstractChainContext.handler(verifyArgs.type(), joinPoint.getArgs()[0], verifyArgs.paramType());
+        abstractChainContext.handler(verifyArgs.type(), joinPoint.getArgs()[0]);
     }
 
 

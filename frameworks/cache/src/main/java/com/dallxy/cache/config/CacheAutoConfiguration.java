@@ -7,6 +7,7 @@ import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -14,6 +15,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.util.concurrent.TimeUnit;
 
+@ComponentScan("com.dallxy.cache")
 public class CacheAutoConfiguration {
     @Value("${service.cache.prefix}")
     private String cachePrefix;

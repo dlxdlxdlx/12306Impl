@@ -12,6 +12,10 @@
     <packaging>pom</packaging>
     <modules>
         <module>user-service</module>
+        <module>gateway-service</module>
+        <module>ticket-service</module>
+        <module>order-service</module>
+        <module>pay-service</module>
     </modules>
     <artifactId>12306-services</artifactId>
 
