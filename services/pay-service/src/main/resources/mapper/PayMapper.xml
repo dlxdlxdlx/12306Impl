@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dallxy.payService.dao.mapper.PayMapper">
+  <resultMap id="BaseResultMap" type="com.dallxy.payService.dao.entity.Pay">
+    <!--@mbg.generated-->
+    <!--@Table t_pay-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="pay_sn" jdbcType="VARCHAR" property="paySn" />
+    <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+    <result column="out_order_sn" jdbcType="VARCHAR" property="outOrderSn" />
+    <result column="channel" jdbcType="VARCHAR" property="channel" />
+    <result column="trade_type" jdbcType="VARCHAR" property="tradeType" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="order_request_id" jdbcType="VARCHAR" property="orderRequestId" />
+    <result column="total_amount" jdbcType="INTEGER" property="totalAmount" />
+    <result column="trade_no" jdbcType="VARCHAR" property="tradeNo" />
+    <result column="gmt_payment" jdbcType="TIMESTAMP" property="gmtPayment" />
+    <result column="pay_amount" jdbcType="INTEGER" property="payAmount" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="del_flag" jdbcType="BOOLEAN" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, pay_sn, order_sn, out_order_sn, channel, trade_type, subject, order_request_id, 
+    total_amount, trade_no, gmt_payment, pay_amount, `status`, create_time, update_time, 
+    del_flag
+  </sql>
+</mapper>

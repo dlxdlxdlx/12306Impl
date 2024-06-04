@@ -1,4 +1,4 @@
-package com.dallxy.ticketService.dao.mapper;
+package com.dallxy.orderService.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dallxy.orderService.dao.entity.OrderItemDao;

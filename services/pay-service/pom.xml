@@ -11,5 +11,22 @@
 
     <artifactId>pay-service</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.dallxy</groupId>
+            <artifactId>bizs</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dallxy</groupId>
+            <artifactId>cache</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dallxy</groupId>
+            <artifactId>database</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -1,8 +1,11 @@
 package com.dallxy.orderService.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.dallxy.common.result.Result;
 import com.dallxy.common.result.Results;
+import com.dallxy.orderService.dto.req.CancelTicketOrderReqDTO;
 import com.dallxy.orderService.dto.req.TicketOrderItemQueryReqDTO;
+import com.dallxy.orderService.dto.req.TicketOrderPageQueryReqDTO;
 import com.dallxy.orderService.dto.resp.TicketOrderDetailRespDTO;
 import com.dallxy.orderService.dto.resp.TicketOrderPassengerDetailRespDTO;
 import lombok.RequiredArgsConstructor;
@@ -40,14 +43,13 @@ public class TicketOrderController {
      * @return
      */
     @GetMapping("/api/order-service/order/ticket/page")
-    public Result<PageResponse<TicketOrderDetailRespDTO>> pageTicketOrder(TicketOrderPageQueryReqDTO requestParam){
+    public Result<IPage<TicketOrderDetailRespDTO>> pageTicketOrder(TicketOrderPageQueryReqDTO requestParam){
         return Results.success();
     }
 
 
 
     /**车票取消
-     *
      * @param requestParam
      * @return
      */
