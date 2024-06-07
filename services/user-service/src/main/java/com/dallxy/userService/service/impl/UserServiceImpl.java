@@ -55,10 +55,15 @@ public class UserServiceImpl implements UserService {
     private final UserReuseMapper userReuseMapper;
     private final UserDeletionMapper userDeletionMapper;
 
+    /** 用户登录
+     * @param requestParam 用户登录入参
+     * @return
+     */
     @Override
     public UserLoginRespDTO login(UserLoginReqDTO requestParam) {
         String usernameOrMailOrPhone = requestParam.getUsernameOrMailOrPhone();
         String username = null;
+//        判断当前用户是使用邮箱还是手机号登录,亦或者是用户名登录
         if (Validator.isEmail(usernameOrMailOrPhone)) {
             Optional.ofNullable(userMailMapper.getUserNameByMail(usernameOrMailOrPhone))
                     .orElseThrow(() -> new ClientException("邮箱不存在"));
@@ -76,9 +81,9 @@ public class UserServiceImpl implements UserService {
         UserInfoDTO userInfo = BeanUtil.copyProperties(userDao, UserInfoDTO.class);
         String token = JWTUtils.generateAccessToken(userInfo);
         userInfo.setAccessToken(token);
-        //put data into cache
-        localCache.put(CacheKeyConstant.TOKEN_PREFIX + token, JSON.toJSONString(userInfo));
-        remoteCache.put(CacheKeyConstant.TOKEN_PREFIX + token, JSON.toJSONString(userInfo), 30, TimeUnit.MINUTES);
+//        添加本地缓存和redis缓存
+        localCache.<UserInfoDTO>put(CacheKeyConstant.TOKEN_PREFIX + token, userInfo);
+        remoteCache.put(CacheKeyConstant.TOKEN_PREFIX+token,userInfo);
         return BeanUtil.copyProperties(userInfo, UserLoginRespDTO.class);
     }
 
@@ -88,8 +93,7 @@ public class UserServiceImpl implements UserService {
             throw new ClientException("token 不得为空");
         }
         return localCache.get(CacheKeyConstant.TOKEN_PREFIX + accessToken,
-                UserLoginRespDTO.class,
-                key -> remoteCache.getIfPresent(CacheKeyConstant.TOKEN_PREFIX + accessToken)
+                remoteCache::getIfPresent
         );
     }
 
@@ -112,12 +116,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserRegisterRespDTO register(UserRegisterReqDTO requestParam) {
-        System.out.println("register");
         /*
          * 涉及到三张表的操作: UserMapper, UserPhoneMapper, UserReuseMapper, 以及布隆过滤器
          * 当前版本只涉及局部事务,所以暂不考虑seata
          * 是否能通过线程池让多个数据库操作并发执行减少时间开销?(同时要求整体的一致性)
-         *
          * 方案1:
          * 通过自定义注解配合 信号量实现并行进行数据库的CRUD操作
          *

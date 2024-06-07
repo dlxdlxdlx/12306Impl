@@ -1,5 +1,6 @@
 package com.dallxy.ticketService.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
@@ -74,9 +75,10 @@ public class TicketServiceImpl extends ServiceImpl<TicketDaoMapper, TicketDao> i
 
         ArrayList<TicketListDTO> seatResults = new ArrayList<>();
         String buildRegionTrainStationHashKey = String.format(RedisConstant.REGION_TRAIN_STATION, stationDetails.get(0).toString(), stationDetails.get(1).toString());
+//        TODO: 从redis中加载的数据需要加载到LocalCache中
+        Map<Object, Object> regionTrainStationAllMap = new HashMap<>();
         if (Boolean.FALSE.equals(stringRedisTemplate.hasKey(buildRegionTrainStationHashKey))) {
             RLock lock = redissonClient.getLock(RedisConstant.LOCK_REGION_TRAIN_STATION);
-            Map<Object, Object> regionTrainStationAllMap = new HashMap<>();
             lock.lock();
             try {
                 if (Boolean.FALSE.equals(stringRedisTemplate.hasKey(buildRegionTrainStationHashKey))) {
@@ -84,7 +86,7 @@ public class TicketServiceImpl extends ServiceImpl<TicketDaoMapper, TicketDao> i
                             .eq(TrainStationRelationDao::getStartRegion, stationDetails.get(0).toString())
                             .eq(TrainStationRelationDao::getEndRegion, stationDetails.get(1).toString());
                     List<TrainStationRelationDao> trainStationRelationList = trainStationRelationDaoMapper.selectList(trainStationQueryWrapper);
-                    trainStationRelationList.forEach(each -> {
+                    for (TrainStationRelationDao each : trainStationRelationList) {
                         TrainDao train = localCache.get(RedisConstant.TRAIN_INFO + each.getTrainId(), k ->
                                 remoteCache.<TrainDao>get(k, key -> {
                                     TrainDao trainDao = trainMapper.selectById(each.getTrainId());
@@ -107,28 +109,30 @@ public class TicketServiceImpl extends ServiceImpl<TicketDaoMapper, TicketDao> i
                                 .daysArrived((int) DateUtil.betweenDay(each.getDepartureTime(), each.getArrivalTime(), false))
                                 .saleStatus(new Date().after(train.getSaleTime()) ? 0 : 1)
                                 .saleTime(DateUtils.convertDateToLocalTime(train.getSaleTime(), "MM-dd HH:mm"))
-
                                 .build();
-
                         if (StrUtil.isNotBlank(train.getTrainTag())) {
                             ticketList.setTrainTags(StrUtil.split(train.getTrainTag(), ","));
                         }
                         seatResults.add(ticketList);
                         regionTrainStationAllMap.put(Joiner.on("_").join(each.getTrainId(), each.getDeparture(), each.getArrival()), JSON.toJSONString(ticketList));
-                    });
+                    }
+
                     stringRedisTemplate.opsForHash().putAll(buildRegionTrainStationHashKey, regionTrainStationAllMap);
                 }
             } finally {
                 lock.unlock();
             }
+
         }
+        seatResults = CollUtil.isEmpty(regionTrainStationAllMap)
+                ? (ArrayList<TicketListDTO>) regionTrainStationAllMap.values().stream().map(e -> JSON.parseObject(e.toString(), TicketListDTO.class)).toList()
+                : seatResults;
 //        针对需要查询的每车次火车设置座位类型以及对应的价格 还有数量
         for (TicketListDTO ticketList : seatResults) {
-            String key = Joiner.on("_").join(RedisConstant.TRAIN_STATION_PRICE, ticketList.getTrainId(), ticketList.getDeparture(), ticketList.getArrival(), ticketList.getDepartureTime()),
-            String trainStationPriceStr = localCache.get(
+            String key = Joiner.on("_").join(RedisConstant.TRAIN_STATION_PRICE, ticketList.getTrainId(), ticketList.getDeparture(), ticketList.getArrival(), ticketList.getDepartureTime());
+            List<TrainStationPriceDao> trainStationPriceDaoList = localCache.get(
                     key,
                     k -> {
-
                         String res = remoteCache.get(k, key2 -> {
                             LambdaQueryWrapper<TrainStationPriceDao> queryWrapper = Wrappers.lambdaQuery(TrainStationPriceDao.class)
                                     .eq(TrainStationPriceDao::getDeparture, ticketList.getDeparture())
@@ -138,11 +142,9 @@ public class TicketServiceImpl extends ServiceImpl<TicketDaoMapper, TicketDao> i
                             remoteCache.getStringRedisTemplate().opsForValue().set(k, result);
                             return result;
                         });
-                        localCache.put(k, res);
-                        return res;
+                        return JSON.parseArray(res, TrainStationPriceDao.class);
                     }
             );
-            List<TrainStationPriceDao> trainStationPriceDaoList = JSON.parseArray(trainStationPriceStr, TrainStationPriceDao.class);
             ArrayList<SeatClassDTO> seatClassList = new ArrayList<>();
             trainStationPriceDaoList.forEach(e -> {
                 String seatType = e.getSeatType().toString();
@@ -154,6 +156,10 @@ public class TicketServiceImpl extends ServiceImpl<TicketDaoMapper, TicketDao> i
                         .map(Integer::parseInt)
                         .orElseGet(() -> {
 //                            加载座位数量.
+                            Map<String, String> seatRemainMap = loadSeatQuantity(String.valueOf(e.getTrainId()), seatType, e.getDeparture(), e.getArrival());
+                            return Optional.ofNullable(seatRemainMap.get(String.valueOf(e.getSeatType())))
+                                    .map(Integer::parseInt)
+                                    .orElse(0);
                         });
                 seatClassList.add(new SeatClassDTO(e.getSeatType(), quantity, new BigDecimal(e.getPrice()).divide(new BigDecimal(100), 1, RoundingMode.HALF_UP), false));
             });
@@ -167,6 +173,21 @@ public class TicketServiceImpl extends ServiceImpl<TicketDaoMapper, TicketDao> i
                 .seatClassTypeList(buildSeatClassList(seatResults))
                 .build();
     }
+
+    /** 加载火车剩余票的种类和类型
+     * @param trainId 火车ID
+     * @param seatType 座位类型
+     * @param departure 出发站点
+     * @param arrival 到达站点
+     * @return
+     */
+    public Map<String, String> loadSeatQuantity(String trainId, String seatType, String departure, String arrival) {
+        HashMap<String, String> result = new HashMap<>();
+
+
+        return result;
+    }
+
 
     /**
      * 根据条件查询车票V2高性能版本

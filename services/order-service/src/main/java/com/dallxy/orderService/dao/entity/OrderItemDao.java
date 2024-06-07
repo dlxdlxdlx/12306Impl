@@ -6,13 +6,18 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 订单明细表
  */
 @Data
 @TableName(value = "t_order_item")
+@NoArgsConstructor
+@Builder
 public class OrderItemDao implements Serializable {
     /**
      * ID

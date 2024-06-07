@@ -5,8 +5,9 @@ import com.dallxy.ticketService.dao.SeatDao;
 import com.dallxy.ticketService.dto.resp.TrainPurchaseTicketRespDTO;
 
 import java.util.List;
+import java.util.Map;
 
-public interface SeatService extends IService<SeatDao> {
+public interface SeatService {
     /**
      * 获取列车车厢中可用的座位集合
      *
@@ -60,4 +61,8 @@ public interface SeatService extends IService<SeatDao> {
      * @param trainPurchaseTicketResults 乘车人以及座位信息
      */
     void unlock(String trainId, String departure, String arrival, List<TrainPurchaseTicketRespDTO> trainPurchaseTicketResults);
+
+
+
+    Map<String,String> loadSeatMargin(String trainId, String seatType, String departure,String arrival);
 }

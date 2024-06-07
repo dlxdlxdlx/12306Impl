@@ -4,15 +4,22 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 订单表
  */
 @Data
+@NoArgsConstructor
 @TableName(value = "t_order")
+@Builder
 public class OrderDao implements Serializable {
     /**
      * ID
@@ -128,5 +135,6 @@ public class OrderDao implements Serializable {
     @TableField(value = "del_flag")
     private Boolean delFlag;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 }
